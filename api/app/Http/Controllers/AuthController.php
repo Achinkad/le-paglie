@@ -46,9 +46,6 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // Delete router authentication token
-        if (Storage::disk('private')->exists('router-token.key')) Storage::disk('private')->delete('router-token.key');
-
         // Delete user token
         $accessToken = $request->user()->token();
         $token = $request->user()->tokens->find($accessToken);

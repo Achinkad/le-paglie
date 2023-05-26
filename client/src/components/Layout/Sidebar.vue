@@ -22,26 +22,22 @@ const router = useRouter()
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="bi bi-tv" style="position:relative;bottom:1px;"></i>
-                            Link 01
-                        </a>
+                        <router-link class="nav-link" :class="{ active: $route.name === 'Cameras' }" :to="{ name: 'Cameras' }">
+                            <i class="bi bi-camera2" style="position:relative;bottom:1px;"></i>
+                            Wi-Fi Cameras
+                        </router-link>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link collapsed"  data-bs-toggle="collapse" href="#sidebarIP" aria-expanded="false" aria-controls="sidebarIP">
-                            <i class="bi bi-diagram-3"></i> Link 02
-                            <span class="menu-arrow"> <i class="bi bi-chevron-right"></i> </span>
-                        </a>
-                        <div class="collapse" id="sidebarIP">
-                            <ul class="side-nav-second-level">
-                                <li>
-                                    <a href="#" class="nav-link">Link 03</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="nav-link">Link 04</a>
-                                </li>
-                            </ul>
-                        </div>
+                        <router-link class="nav-link" :class="{ active: $route.name === 'VideoStreaming' }" :to="{ name: 'VideoStreaming' }">
+                            <i class="bi bi-camera-video"></i>
+                            Video Streaming
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link" :class="{ active: $route.name === 'Identification' }" :to="{ name: 'Identification' }">
+                            <i class="bi bi-images"></i>
+                            Identifications
+                        </router-link>
                     </li>
                 </ul>
             </div>

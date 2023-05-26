@@ -8,11 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('routers', function (Blueprint $table) {
+        Schema::create('cameras', function (Blueprint $table) {
             $table->id();
-            $table->string('identity')->nullable();
+            $table->string('name')->nullable();
             $table->string('ip_address');
-            $table->string('mac_address')->nullable();
+            $table->string('location')->nullable();
             $table->string('authorization'); // Base64 username:password
             $table->timestamps();
         });
@@ -20,6 +20,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('routers');
+        Schema::dropIfExists('cameras');
     }
 };

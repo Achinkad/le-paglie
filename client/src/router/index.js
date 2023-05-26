@@ -10,6 +10,21 @@ const router = createRouter({
             component: () => import('../views/Dashboard.vue')
         },
         {
+            path: '/cameras',
+            name: 'Cameras',
+            component: () => import('../views/Cameras.vue')
+        },
+        {
+            path: '/video-streaming',
+            name: 'VideoStreaming',
+            component: () => import('../views/VideoStreaming.vue')
+        },
+        {
+            path: '/identification',
+            name: 'Identification',
+            component: () => import('../views/Identification.vue')
+        },
+        {
             path: '/login',
             name: 'Login',
             component: () => import('../views/Login.vue')

@@ -26,8 +26,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function router() {
-        return $this->belongsToMany(Router::class, 'router_user', 'user_id', 'router_id')
-            ->withPivot('router_id', 'user_id');
+    public function camera() {
+        return $this->belongsToMany(Camera::class, 'camera_user', 'user_id', 'camera_id')
+            ->withPivot('camera_id', 'user_id');
     }
 }
