@@ -9,6 +9,58 @@ const handler = proxy({
     additionalFlags: ['-q', '1']
 });
 
+
+////////
+//const http = require("http").createServer();
+
+/*
+const io = require("socket.io")(http, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"]
+
+  },
+});
+
+http.listen(8080, () => {
+  console.log("listening on *:8080");
+});
+
+io.on("connection", (socket) => {
+  console.log(`client ${socket.id} has connected`);
+
+  socket.emit("newAlert", { msg: 'Hello world' });
+
+})
+*/
+const WebSocket = require('ws');
+
+const wss = new WebSocket.Server({ port: 8080 });
+
+wss.on('connection', (ws) => {
+  console.log('A client connected.');
+
+  ws.on('message', (message) => {
+    console.log('Received message:', message.toString());
+
+    wss.broadcast(message.toString());
+    
+  });
+
+  wss.broadcast = function broadcast(message) {
+ 
+    wss.clients.forEach(function each(client) {
+      
+        client.send(message);
+     });
+  };
+
+  ws.on('close', () => {
+    console.log('A client disconnected.');
+  });
+});
+/////////
+
 // the endpoint our RTSP uses
 app.ws('/api/stream', handler);
 

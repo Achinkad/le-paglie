@@ -4,6 +4,9 @@ import { defineStore } from 'pinia'
 export const useCameraStore = defineStore('camera', () => {
     const axiosApi = inject('axiosApi') // Axios
     const notyf = inject('notyf') // Notyf
+    
+    const socket = new WebSocket('ws://localhost:8080/');
+    socket.binaryType = 'blob'
 
     const cameras = ref([]) // Cameras
 
@@ -25,10 +28,12 @@ export const useCameraStore = defineStore('camera', () => {
             notyf.error(error.response.data + " (" + error.response.status + ")")
         })
     }
+    
 
     return {
         loadCameras,
         getCameras,
         registerCamera
+
     }
 })

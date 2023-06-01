@@ -16,6 +16,7 @@ import './assets/css/master.css'
 
 const app = createApp(App)
 const apiUrl = import.meta.env.VITE_API_URL
+const wsConnection = import.meta.env.VITE_WS_CONNECTION;
 
 /* --- AXIOS --- */
 app.provide(
@@ -52,6 +53,9 @@ app.provide('notyf', new Notyf({
         }
     ]
 }))
+
+/* --- SOCKET.IO --- */
+//app.provide("socket", io("http://localhost:8080/"));
 
 app.use(createPinia())
 app.use(router)

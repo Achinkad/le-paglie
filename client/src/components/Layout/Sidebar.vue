@@ -39,6 +39,12 @@ const router = useRouter()
                             Identifications
                         </router-link>
                     </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link" :class="{ active: $route.name === 'Alert' }" :to="{ name: 'Alert' }">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            Alerts
+                        </router-link>
+                    </li>
                 </ul>
             </div>
         </nav>
