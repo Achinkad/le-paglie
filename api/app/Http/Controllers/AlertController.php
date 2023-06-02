@@ -25,7 +25,7 @@ class AlertController extends Controller
     public function registerAlert(Request $request)
     {
         
-        $request['camera_id']=Camera::where('ip_address',$request->camera_ip)->pluck('id')->first();
+        $request['camera_id']=Camera::where('ip_address',$request->camera_ip)->pluck('id')->firstOrFail();
         unset($request['camera_ip']);
 
         $alert = new Alert();

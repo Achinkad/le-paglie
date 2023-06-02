@@ -5,7 +5,7 @@ export const useAlertStore = defineStore('alert', () => {
     const axiosApi = inject('axiosApi') // Axios
     const notyf = inject('notyf') // Notyf
     
-    const socket = new WebSocket('ws://localhost:8080/');
+    const socket = new WebSocket('ws://10.10.88.246:8080/');
     socket.binaryType = 'blob'
 
     const alerts = ref([]) // Cameras
@@ -23,7 +23,7 @@ export const useAlertStore = defineStore('alert', () => {
 
     async function registerAlert(message,camera_ip) {
         let formData = new FormData()
-
+        
         formData.append('message', message)
         formData.append('camera_ip', camera_ip)
        
@@ -47,14 +47,16 @@ export const useAlertStore = defineStore('alert', () => {
         
                 reader.onload = () => {
                     
-                    registerAlert(reader.result,'192.168.56.107')
-                    notyf.error(reader.result)  
+                    registerAlert(reader.result.split(':')[0],reader.result.split(':')[1])
+                    
+                    notyf.error(reader.result.split(':')[0])  
                 };
         
                 reader.readAsText(event.data);
             } else {
-                registerAlert(event.data,'192.168.56.107')
-                notyf.error(event.data)
+                
+                registerAlert(event.data.split(':')[0],event.data.split(':')[1])
+                notyf.error(event.data.split(':')[0])
             }
         
         };

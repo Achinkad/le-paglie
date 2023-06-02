@@ -1,13 +1,13 @@
 <script setup>
 import { ref, onBeforeMount, inject, computed } from 'vue'
 import { useCameraStore } from '../stores/camera.js'
-
-const axiosApi = inject('axiosApi')
+import { useAlertStore } from "../stores/alert.js"
 
 const isWebcamOpen = ref(false)
 const arrayPhotos = ref([])
 
 const cameraStore = useCameraStore()
+const alertStore = useAlertStore()
 
 const loadCameras = (() => { cameraStore.loadCameras() })
 const cameras = computed(() => { return cameraStore.getCameras() })

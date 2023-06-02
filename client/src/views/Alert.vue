@@ -63,7 +63,7 @@ onBeforeMount(() => {
 
                                 <td>{{alert.camera_id}}</td>
   
-                                <td>{{alert.created_at}}</td>
+                                <td>{{Date(alert.created_at)}}</td>
 
                             </tr>
                         </tbody>
