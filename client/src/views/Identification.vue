@@ -1,5 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useAlertStore } from "../stores/alert.js"
+
+const alertStore = useAlertStore()
 </script>
 
 <template>

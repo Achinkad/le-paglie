@@ -1,7 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { loadPlayer } from 'rtsp-relay/browser'
+import { useAlertStore } from "../stores/alert.js"
 
+const alertStore = useAlertStore()
 const canvas = ref(null)
 
 onMounted(() => {

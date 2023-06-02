@@ -3,6 +3,7 @@ import { ref, inject, computed, onBeforeMount } from 'vue'
 
 import { useUserStore } from '../stores/user.js'
 import { useCameraStore } from '../stores/camera.js'
+import { useAlertStore } from "../stores/alert.js"
 
 import { loadPlayer } from 'rtsp-relay/browser'
 
@@ -11,6 +12,7 @@ const notyf = inject('notyf')
 
 const userStore = useUserStore()
 const cameraStore = useCameraStore()
+const alertStore = useAlertStore()
 
 const loadCameras = (() => { cameraStore.loadCameras() })
 const cameras = computed(() => { return cameraStore.getCameras() })
