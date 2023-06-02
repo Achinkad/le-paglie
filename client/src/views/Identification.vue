@@ -16,25 +16,29 @@ const alertStore = useAlertStore()
     <div class="row">
         <div class="col-12">
             <div class="row">
-                <div class="col-6">
+                <div class="col-5">
                     <div class="card card-h-100">
                         <div class="d-flex card-header justify-content-between align-items-center">
-                            <h4 class="header-title">Take or Upload a Photo of a person or a pet</h4>
+                            <h4 class="header-title">Capture or Import a Picture</h4>
                         </div>
                         <div class="card-body pt-0">
                             <div class="row">
-                                <div>
-                                    <p>Put the photo frame here.</p>
+                                <div class="col-12">
+                                    <div class="beforePhotoFrame">
+                                        <p class="m-0 text-center">
+                                            <a href="#" @click="openWebcam()">Click here</a> to take a photo, or drop it to
+                                            upload.
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="col-12 d-flex justify-content-end">
-                                    <button type="button" name="button" class="btn btn-primary">Take a photo</button>
-                                    <button type="button" name="button" class="btn btn-primary ms-2">Upload a photo</button>
+                                <div class="col-12 mt-3">
+                                    <button type="button" name="button" class="btn btn-primary w-100">Take a photo</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-6">
+                <div class="col-7">
                     <div class="card card-h-100">
                         <div class="d-flex card-header justify-content-between align-items-center">
                             <h4 class="header-title">Details</h4>
@@ -48,3 +52,17 @@ const alertStore = useAlertStore()
         </div>
     </div>
 </template>
+
+<style scoped>
+.beforePhotoFrame {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: #fafbfe;
+    height: 50vh;
+    border-radius: 4px;
+    outline: 2px dashed #ececec;
+    outline-offset: -15px;
+}
+</style>
