@@ -16,8 +16,14 @@ class Camera extends Model
         'authorization'
     ];
 
-    public function user() {
+    public function user() 
+    {
         return $this->belongsToMany(User::class, 'camera_user', 'camera_id', 'user_id')
             ->withPivot('camera_id', 'user_id');
+    }
+
+    public function recognition()
+    {
+        return $this->hasMany(Recognition::class, 'camera_id', 'id');
     }
 }

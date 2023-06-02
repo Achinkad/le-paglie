@@ -9,6 +9,7 @@ export const useCameraStore = defineStore('camera', () => {
     socket.binaryType = 'blob'
 
     const cameras = ref([]) // Cameras
+    const photos = ref([]) // Photos
 
     async function loadCameras(body) {
         await axiosApi.get('cameras', { params: body }).then(response => {
@@ -29,11 +30,20 @@ export const useCameraStore = defineStore('camera', () => {
         })
     }
     
+    async function registerPhotos(data) {
+        await axiosApi.post('photo/create', data).then((response) => {
+            console.log(response.data)
+            photos.value.push(response.data.data)
+            notyf.success('The photos were uploaded with success.')
+        }).catch((error) => {
+            notyf.error(error.response.data + " (" + error.response.status + ")")
+        })
+    }
 
     return {
         loadCameras,
         getCameras,
-        registerCamera
-
+        registerCamera,
+        registerPhotos
     }
 })

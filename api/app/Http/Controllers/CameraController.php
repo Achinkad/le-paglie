@@ -12,7 +12,7 @@ class CameraController extends Controller
 {
     public function getAllCameras()
     {
-        $cameras = Camera::all();
+        $cameras = Auth()->guard('api')->user()->camera;
 
         // Check connectivity
         foreach ($cameras as $camera) {

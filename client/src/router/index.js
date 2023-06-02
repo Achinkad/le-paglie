@@ -20,9 +20,9 @@ const router = createRouter({
             component: () => import('../views/VideoStreaming.vue')
         },
         {
-            path: '/identification',
-            name: 'Identification',
-            component: () => import('../views/Identification.vue')
+            path: '/person-recognition',
+            name: 'PersonRecognition',
+            component: () => import('../views/PersonRecognition.vue')
         },
         {
             path: '/alert',

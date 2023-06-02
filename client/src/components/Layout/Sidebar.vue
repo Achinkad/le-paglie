@@ -34,9 +34,9 @@ const router = useRouter()
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link" :class="{ active: $route.name === 'Identification' }" :to="{ name: 'Identification' }">
+                        <router-link class="nav-link" :class="{ active: $route.name === 'PersonRecognition' }" :to="{ name: 'PersonRecognition' }">
                             <i class="bi bi-images"></i>
-                            Identifications
+                            Person Recognition
                         </router-link>
                     </li>
                     <li class="nav-item">
