@@ -15,6 +15,7 @@ Route::get('user', [UserController::class, 'showUserLoggedIn'])->middleware('aut
 /* --- [API Routes] -> Camera --- */
 Route::get('cameras', [CameraController::class, 'getAllCameras']);
 Route::post('cameras/create', [CameraController::class, 'registerCamera']);
+Route::patch('cameras/pet/{id}', [CameraController::class, 'tooglePet']);
 
 /* --- [API Routes] -> Photo Recognition --- */
 Route::get('photos', [PhotoController::class, 'getAllPhotos']);

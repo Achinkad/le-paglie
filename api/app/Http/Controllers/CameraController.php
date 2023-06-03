@@ -45,4 +45,12 @@ class CameraController extends Controller
         $currentUser->camera()->attach($camera->id);
         return new CameraResource($camera);
     }
+
+    public function tooglePet(Request $request)
+    {
+        $camera = Camera::where('id', $request->route('id'))->first();
+        $camera->pet_identification = $request->pet == true ? false : true; // Toggle Disabled
+        $camera->save();
+        return $camera;
+    }
 }

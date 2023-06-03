@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('ip_address');
             $table->string('location')->nullable();
+            $table->string('pet_identification')->default(false);
             $table->string('authorization'); // Base64 username:password
             $table->timestamps();
         });

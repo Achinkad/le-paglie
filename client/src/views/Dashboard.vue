@@ -1,21 +1,25 @@
 <script setup>
 import { ref, inject, computed, onBeforeMount } from 'vue'
 
-import { useUserStore } from '../stores/user.js'
 import { useCameraStore } from '../stores/camera.js'
-import { useAlertStore } from "../stores/alert.js"
+import { useAlertStore } from '../stores/alert.js'
 
 import { loadPlayer } from 'rtsp-relay/browser'
 
-const axiosApi = inject('axiosApi')
 const notyf = inject('notyf')
+const axiosApi = inject('axiosApi')
 
-const userStore = useUserStore()
 const cameraStore = useCameraStore()
 const alertStore = useAlertStore()
 
 const loadCameras = (() => { cameraStore.loadCameras() })
 const cameras = computed(() => { return cameraStore.getCameras() })
+
+const loadAlerts = (() => { alertStore.loadAlerts() })
+const alerts = computed(() => { return alertStore.getAlerts() })
+
+const loadRecognitions = (() => { cameraStore.loadRecognitions() })
+const recognitions = computed(() => { return cameraStore.getRecognitions() })
 
 const cameraStreaming = ref(false)
 const canvas = ref(null)
@@ -28,31 +32,90 @@ const showStream = ((camera) => {
     })
 })
 
-// Copy camera authorization into the clipboard
-const copy = ((camera) => {
-    navigator.clipboard.writeText(decodeAuthorization(camera.authorization))
-    notyf.open({type: 'info', message: 'The RTSP authorization is now on your clipboard. Go paste it!'})
-})
-
-const decodeAuthorization = ((authorization) => {
-    return atob(authorization)
-})
-
 const activeCameras = (() => {
     if (cameras.value.length == 0) return
 
     let active = 0
 
-    cameras.value.forEach((i) => {
+    cameras.value.forEach(i => {
         if (!i.disabled) active++
     })
 
     return (active / cameras.value.length * 100).toFixed(0) + "%"
 })
 
+const lastWeek = (() => {
+    if (alerts.value.length == 0) return
+
+    let lastWeekAlerts = 0
+    let currentDate = new Date()
+    let oneWeekAgo = new Date()
+
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+
+    alerts.value.forEach(i => {
+        let alertDate = new Date(i.created_at)
+        if (alertDate >= oneWeekAgo && alertDate <= currentDate) lastWeekAlerts++
+    })
+
+    return (lastWeekAlerts / alerts.value.length * 100).toFixed(0) + "%"
+})
+
+const lastWeekRecons = (() => {
+    if (recognitions.value.length == 0) return
+
+    let lastWeekRecons = 0
+    let currentDate = new Date()
+    let oneWeekAgo = new Date()
+
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+
+    recognitions.value.forEach(i => {
+        let reconDate = new Date(i.created_at)
+        if (reconDate >= oneWeekAgo && reconDate <= currentDate) lastWeekRecons++
+    })
+
+    return (lastWeekRecons / recognitions.value.length * 100).toFixed(0) + "%"
+})
+
+const tooglePet = ((camera) => {
+    let body = {
+        camera: camera.id,
+        pet: camera.pet_identification
+    }
+
+    axiosApi.patch('cameras/pet/' + camera.id, body).then((response) => {
+        if (body.pet) {
+            notyf.success('The pet identification was disabled with success.')
+        } else {
+            notyf.success('The pet identification was activated with success.')
+        }
+
+        loadCameras()
+    }).catch((error) => {
+        notyf.error('Oops, an error has occurred.')
+    })
+})
+
+const petIdentifications = (() => {
+    if (cameras.value.length == 0) return
+    let petActive = 0
+    cameras.value.forEach(i => { if (i.pet_identification == '1') petActive++ })
+    return petActive
+})
+
+const petIdentificationsPercentage = (() => {
+    if (cameras.value.length == 0) return
+    let petActive = 0
+    cameras.value.forEach(i => { if (i.pet_identification == '1' && !i.disabled) petActive++ })
+    return (petActive / cameras.value.length * 100).toFixed(0) + "%"
+})
+
 // Get all cameras in the system
 onBeforeMount(() => {
     loadCameras()
+    loadAlerts()
+    loadRecognitions()
 })
 </script>
 
@@ -76,8 +139,12 @@ onBeforeMount(() => {
                             <h5 class="text-muted fw-normal mt-0">Wi-Fi Cameras</h5>
                             <h3 class="mt-3 mb-3" v-if="cameras.length > 0">{{ cameras.length }}</h3>
                             <h3 class="mt-3 mb-3" v-else> - </h3>
-                            <p class="mb-0 text-muted">
+                            <p class="mb-0 text-muted" v-if="cameras.length > 0">
                                 <span class="text-success me-2"> {{ activeCameras() }} </span>
+                                <span class="text-nowrap">Active right now</span>
+                            </p>
+                            <p class="mb-0 text-muted" v-else>
+                                <span class="text-success me-2"> - % </span>
                                 <span class="text-nowrap">Active right now</span>
                             </p>
                         </div>
@@ -87,12 +154,17 @@ onBeforeMount(() => {
                     <div class="card widget-flat">
                         <div class="card-body">
                             <div class="float-end">
-                                <i class="bi bi-database-fill card-icon"></i>
+                                <i class="bi bi-exclamation-triangle-fill card-icon"></i>
                             </div>
-                            <h5 class="text-muted fw-normal mt-0">Backups</h5>
-                            <h3 class="mt-3 mb-3">26</h3>
-                            <p class="mb-0 text-muted">
-                                <span class="text-success me-2"> 76.12% </span>
+                            <h5 class="text-muted fw-normal mt-0">Alerts</h5>
+                            <h3 class="mt-3 mb-3" v-if="alerts.length > 0">{{ alerts.length }}</h3>
+                            <h3 class="mt-3 mb-3" v-else> - </h3>
+                            <p class="mb-0 text-muted" v-if="alerts.length > 0">
+                                <span class="text-success me-2"> {{ lastWeek() }} </span>
+                                <span class="text-nowrap">In last week</span>
+                            </p>
+                            <p class="mb-0 text-muted" v-else>
+                                <span class="text-success me-2"> - % </span>
                                 <span class="text-nowrap">In last week</span>
                             </p>
                         </div>
@@ -105,10 +177,10 @@ onBeforeMount(() => {
                                 <i class="bi bi-person-fill card-icon"></i>
                             </div>
                             <h5 class="text-muted fw-normal mt-0">Persons</h5>
-                            <h3 class="mt-3 mb-3">3</h3>
+                            <h3 class="mt-3 mb-3">{{ recognitions.length }}</h3>
                             <p class="mb-0 text-muted">
-                                <span class="text-danger me-2"> -12.57% </span>
-                                <span class="text-nowrap">Since last week</span>
+                                <span class="text-success me-2"> {{ lastWeekRecons() }} </span>
+                                <span class="text-nowrap">Added last week</span>
                             </p>
                         </div>
                     </div>
@@ -117,13 +189,18 @@ onBeforeMount(() => {
                     <div class="card widget-flat">
                         <div class="card-body">
                             <div class="float-end">
-                                <i class="bi bi-incognito card-icon"></i>
+                                <i class="bi bi-browser-firefox card-icon"></i>
                             </div>
-                            <h5 class="text-muted fw-normal mt-0">Pets</h5>
-                            <h3 class="mt-3 mb-3">1</h3>
-                            <p class="mb-0 text-muted">
-                                <span class="text-success me-2"> 12.31% </span>
+                            <h5 class="text-muted fw-normal mt-0">Pets (Dogs & Cats)</h5>
+                            <h3 class="mt-3 mb-3" v-if="cameras.length > 0">{{ petIdentifications() }}</h3>
+                            <h3 class="mt-3 mb-3" v-else> - </h3>
+                            <p class="mb-0 text-muted" v-if="cameras.length > 0">
+                                <span class="text-success me-2"> {{ petIdentificationsPercentage() }} </span>
                                 <span class="text-nowrap">Active right now</span>
+                            </p>
+                            <p class="mb-0 text-muted" v-else>
+                                <span class="text-success me-2"> - % </span>
+                                <span class="text-nowrap">In last week</span>
                             </p>
                         </div>
                     </div>
@@ -144,23 +221,31 @@ onBeforeMount(() => {
                                         <th style="width:8%">#ID</th>
                                         <th style="width:13%">Name</th>
                                         <th style="width:18%">IP address</th>
-                                        <th style="width:14%">Location</th>
-                                        <th>Authorization</th>
-                                        <th class="text-center" style="width:11%">Active</th>
+                                        <th style="width:11%">Location</th>
+                                        <th class="text-center" style="width:20%">Pets Identification</th>
+                                        <th class="text-center" style="width:10%">Active</th>
                                         <th class="text-center" style="width:14%">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-if="cameras.length == 0">
-                                        <td colspan="7" class="text-center" style="height:55px!important;">There are no cameras registered in the system.</td>
+                                        <td colspan="7" class="text-center" style="height:55px!important;">There are no
+                                            cameras registered in the system.</td>
                                     </tr>
                                     <tr v-for="camera in cameras" :key="camera.id">
                                         <td class="align-middle" style="height:55px!important;">#{{ camera.id }}</td>
                                         <td>{{ camera.name }}</td>
                                         <td>{{ camera.ip_address }}</td>
                                         <td>{{ camera.location }}</td>
-                                        <td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px; cursor:pointer;"
-                                        @click="copy(camera)" title="Click to copy to your clipboard!"><u>{{ decodeAuthorization(camera.authorization) }}</u></td>
+                                        <td class="text-center">
+                                            <div class="form-check form-switch">
+                                                <div class="d-flex justify-content-center">
+                                                    <input class="form-check-input" type="checkbox" role="switch"
+                                                        @click="tooglePet(camera)"
+                                                        :checked="camera.pet_identification == true">
+                                                </div>
+                                            </div>
+                                        </td>
                                         <td class="text-center" v-if="camera.disabled">
                                             <span class="badge badge-danger-lighten">Disabled</span>
                                         </td>
@@ -169,7 +254,9 @@ onBeforeMount(() => {
                                         </td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center">
-                                                <button class="btn btn-xs btn-light table-button" :disabled="camera.disabled" title="View Stream" @click="showStream(camera)">
+                                                <button class="btn btn-xs btn-light table-button"
+                                                    :disabled="camera.disabled" title="View Stream"
+                                                    @click="showStream(camera)">
                                                     <i class="bi bi-eye"></i>
                                                 </button>
                                             </div>
@@ -183,7 +270,8 @@ onBeforeMount(() => {
                 <div class="col-12" v-show="cameraStreaming">
                     <div class="card card-h-100">
                         <div class="d-flex card-header justify-content-between align-items-center">
-                            <h4 class="header-title">Stream for the camera in the {{ cameraStreaming.name }} ({{ cameraStreaming.ip_address }})</h4>
+                            <h4 class="header-title">Stream for the camera in the {{ cameraStreaming.name }} ({{
+                                cameraStreaming.ip_address }})</h4>
                         </div>
                         <div class="card-body pt-0">
                             <canvas id="canvas" ref="canvas" style="width:100%!important;"></canvas>
@@ -275,5 +363,4 @@ onBeforeMount(() => {
 .text-nowrap {
     font-size: 14.4px;
     color: rgb(138, 150, 156);
-}
-</style>
+}</style>
