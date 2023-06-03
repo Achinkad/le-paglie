@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AlertController;
 use App\Http\Controllers\CameraController;
+use App\Http\Controllers\PhotoController;
 
 /* --- [API Routes] -> Users --- */
 Route::resource('users', UserController::class);
@@ -15,7 +16,10 @@ Route::get('user', [UserController::class, 'showUserLoggedIn'])->middleware('aut
 Route::get('cameras', [CameraController::class, 'getAllCameras']);
 Route::post('cameras/create', [CameraController::class, 'registerCamera']);
 
-/* --- [API Routes] -> Camera --- */
+/* --- [API Routes] -> Photo Recognition --- */
+Route::post('photo/create', [PhotoController::class, 'registerPhoto']);
+
+/* --- [API Routes] -> Alerts --- */
 Route::get('alerts', [AlertController::class, 'getAllAlerts']);
 Route::post('alerts/create', [AlertController::class, 'registerAlert']);
 
