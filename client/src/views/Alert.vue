@@ -45,10 +45,10 @@ onBeforeMount(() => {
                     <table class="table table-responsive align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th class="text-center" style="width:5%">#ID</th>
+                                <th class="text-center" style="width:10%">#ID</th>
                                 <th>Message</th>
-                                <th>Camera ID</th>
-                                <th>Creation Time</th>
+                                <th style="width:15%">Camera ID</th>
+                                <th style="width:50%">Creation Time</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -54,9 +54,6 @@ app.provide('notyf', new Notyf({
     ]
 }))
 
-/* --- SOCKET.IO --- */
-//app.provide("socket", io("http://localhost:8080/"));
-
 app.use(createPinia())
 app.use(router)
 
