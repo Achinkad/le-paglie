@@ -25,6 +25,11 @@ const router = createRouter({
             component: () => import('../views/PersonRecognition.vue')
         },
         {
+            path: '/recognitions',
+            name: 'Recognitions',
+            component: () => import('../views/Recognitions.vue')
+        },
+        {
             path: '/alert',
             name: 'Alert',
             component: () => import('../views/Alert.vue')

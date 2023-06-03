@@ -10,6 +10,12 @@ use App\Models\Recognition;
 
 class PhotoController extends Controller
 {
+    public function getAllPhotos(Request $request)
+    {
+        $recons = Recognition::where('user_id', Auth()->guard('api')->user()->id)->with('camera')->get();
+        return $recons;
+    }
+
     public function registerPhoto(Request $request) 
     {
         $photos = [];
@@ -20,7 +26,7 @@ class PhotoController extends Controller
                 $photoName = $username . "_" . $i . "." . explode('/', explode(';', $request->input('photo' . $i))[0])[1];
                 $photo = base64_decode(preg_replace('/^data:image\/\w+;base64,/', '', $request['photo' . $i]));
                 
-                Storage::put('public/photos/' . $username . '/' . $photoName, $photo);
+                Storage::put('public/photos/' . $photoName, $photo);
                 Storage::disk('ftp')->put('photos/' . $photoName, $photo);
                 
                 array_push($photos, $photoName);
@@ -38,6 +44,24 @@ class PhotoController extends Controller
         $recon->photos = json_encode($photos);
         $recon->save();
 
-        return $recon;
+        $newRecon = Recognition::where('id', $recon->id)->with('camera')->first();
+
+        return $newRecon;
+    }
+
+    public function deletePhoto(Request $request)
+    {
+        $recon = Recognition::where('id', $request->route('id'))->first();
+
+        // Delete photos from local and ftp disks
+        $photos = json_decode($recon->photos);
+        
+        foreach ($photos as $photo) {
+            Storage::delete('public/photos/' . $photo);
+            Storage::disk('ftp')->delete('photos/' . $photo);
+        }
+
+        $recon->delete();
+        return response()->json("Recognition deleted with success.", 200);
     }
 }

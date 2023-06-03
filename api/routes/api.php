@@ -17,7 +17,9 @@ Route::get('cameras', [CameraController::class, 'getAllCameras']);
 Route::post('cameras/create', [CameraController::class, 'registerCamera']);
 
 /* --- [API Routes] -> Photo Recognition --- */
-Route::post('photo/create', [PhotoController::class, 'registerPhoto']);
+Route::get('photos', [PhotoController::class, 'getAllPhotos']);
+Route::post('photos/create', [PhotoController::class, 'registerPhoto']);
+Route::delete('photos/delete/{id}', [PhotoController::class, 'deletePhoto']);
 
 /* --- [API Routes] -> Alerts --- */
 Route::get('alerts', [AlertController::class, 'getAllAlerts']);

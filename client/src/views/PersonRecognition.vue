@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onBeforeMount, inject, computed } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import { useCameraStore } from '../stores/camera.js'
-import { useAlertStore } from "../stores/alert.js"
+import { useAlertStore } from '../stores/alert.js'
 
 const isWebcamOpen = ref(false)
 const arrayPhotos = ref([])

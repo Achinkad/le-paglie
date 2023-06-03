@@ -5,7 +5,7 @@ export const useAlertStore = defineStore('alert', () => {
     const axiosApi = inject('axiosApi') // Axios
     const notyf = inject('notyf') // Notyf
     
-    const socket = new WebSocket('ws://10.10.88.246:8080/');
+    const socket = new WebSocket('ws://10.10.88.244:8080/');
     socket.binaryType = 'blob'
 
     const alerts = ref([]) // Cameras

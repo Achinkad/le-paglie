@@ -31,11 +31,35 @@ export const useCameraStore = defineStore('camera', () => {
     }
     
     async function registerPhotos(data) {
-        await axiosApi.post('photo/create', data).then((response) => {
-            console.log(response.data)
-            photos.value.push(response.data.data)
+        await axiosApi.post('photos/create', data).then((response) => {
+            photos.value.push(response.data)
             notyf.success('The photos were uploaded with success.')
         }).catch((error) => {
+            notyf.error(error.response.data + " (" + error.response.status + ")")
+        })
+    }
+
+    async function loadRecognitions(body) {
+        await axiosApi.get('photos', { params: body }).then(response => {
+            photos.value = response.data
+        }).catch(error => {
+            notyf.error(error.response.data + " (" + error.response.status + ")")
+        })
+    }
+
+    const getRecognitions = (() => { return photos.value })
+
+    async function deleteRecognition(recon, cameraID) {
+        let data = { id: cameraID }
+
+        await axiosApi.delete('photos/delete/' + recon.id,  { params: data }).then(response => {
+            notyf.success('The recognition was deleted with success.')
+
+            // Remove from the array of photos
+            let index = photos.value.indexOf(recon)
+            if (index > -1) photos.value.splice(index, 1)
+        }).catch(error => {
+            console.log(error)
             notyf.error(error.response.data + " (" + error.response.status + ")")
         })
     }
@@ -44,6 +68,9 @@ export const useCameraStore = defineStore('camera', () => {
         loadCameras,
         getCameras,
         registerCamera,
-        registerPhotos
+        registerPhotos,
+        loadRecognitions,
+        getRecognitions,
+        deleteRecognition
     }
 })
