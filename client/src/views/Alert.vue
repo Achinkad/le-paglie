@@ -9,6 +9,23 @@ const alertStore = useAlertStore()
 const loadAlerts = (() => { alertStore.loadAlerts() })
 const alerts = computed(() => { return alertStore.getAlerts() })
 
+const parseDate = ((date) => {
+    const newDate = new Date(date)
+
+    const day = newDate.getDate()
+    const month = newDate.getMonth() + 1
+    const year = newDate.getFullYear()
+
+    const hours = newDate.getHours()
+    const minutes = newDate.getMinutes()
+    const seconds = newDate.getSeconds()
+
+    const formattedDate = `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}/${year}`
+    const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
+
+    return formattedDate + ' ' + formattedTime
+})
+
 const alert = ref({
     name: null,
     ip_address: null,
@@ -20,9 +37,7 @@ const alert = ref({
 
 onBeforeMount(() => {
     loadAlerts()
-
 })
-
 </script>
 
 <template>
@@ -39,36 +54,35 @@ onBeforeMount(() => {
             <div class="card card-h-100">
                 <div class="d-flex card-header justify-content-between align-items-center">
                     <h4 class="header-title">List of all available alerts</h4>
-                    
                 </div>
                 <div class="card-body pt-0">
                     <table class="table table-responsive align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th class="text-center" style="width:10%">#ID</th>
+                                <th style="width:7%">#ID</th>
+                                <th>Camera Name</th>
+                                <th>Camera Address</th>
+                                <th>Camera Location</th>
                                 <th>Message</th>
-                                <th style="width:15%">Camera ID</th>
-                                <th style="width:50%">Creation Time</th>
+                                <th>Alert Date/Time</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-if="alerts.length==0">
-                                <td colspan="4" class="text-center" style="height:55px!important;">There are no alerts.</td>
+                                <td colspan="6" class="text-center" style="height:55px!important;">There are no alerts.</td>
                             </tr>
                             <tr v-for="alert in alerts">
-
-                                <td class="text-center" style="height:55px!important;">{{alert.id}}</td>
-
-                                <td>{{alert.message}}</td>
-
-                                <td>{{alert.camera_id}}</td>
-  
-                                <td>{{Date(alert.created_at)}}</td>
-
+                                <td style="height:55px!important;">{{alert.id}}</td>
+                                <td>{{alert.camera.name}}</td>
+                                <td>{{alert.camera.ip_address}}</td>
+                                <td>{{alert.camera.location}}</td>
+                                <td>
+                                    <span class="badge badge-danger-lighten">{{ alert.message }}</span>
+                                </td>
+                                <td>{{parseDate(alert.created_at)}}</td>
                             </tr>
                         </tbody>
                     </table>
-
                 </div>
             </div>
         </div>

@@ -30,6 +30,11 @@ const router = createRouter({
             component: () => import('../views/Recognitions.vue')
         },
         {
+            path: '/pet-identification',
+            name: 'PetIdentification',
+            component: () => import('../views/PetIdentification.vue')
+        },
+        {
             path: '/alert',
             name: 'Alert',
             component: () => import('../views/Alert.vue')

@@ -140,7 +140,7 @@ onBeforeMount(() => {
                             <h3 class="mt-3 mb-3" v-if="cameras.length > 0">{{ cameras.length }}</h3>
                             <h3 class="mt-3 mb-3" v-else> - </h3>
                             <p class="mb-0 text-muted" v-if="cameras.length > 0">
-                                <span class="text-success me-2"> {{ activeCameras() }} </span>
+                                <span class="me-2" :class="{ 'text-success': activeCameras() != '0%', 'text-danger': activeCameras() == '0%' }"> {{ activeCameras() }} </span>
                                 <span class="text-nowrap">Active right now</span>
                             </p>
                             <p class="mb-0 text-muted" v-else>
@@ -160,7 +160,7 @@ onBeforeMount(() => {
                             <h3 class="mt-3 mb-3" v-if="alerts.length > 0">{{ alerts.length }}</h3>
                             <h3 class="mt-3 mb-3" v-else> - </h3>
                             <p class="mb-0 text-muted" v-if="alerts.length > 0">
-                                <span class="text-success me-2"> {{ lastWeek() }} </span>
+                                <span class="me-2" :class="{ 'text-success': lastWeek() != '0%', 'text-danger': lastWeek() == '0%' }"> {{ lastWeek() }} </span>
                                 <span class="text-nowrap">In last week</span>
                             </p>
                             <p class="mb-0 text-muted" v-else>
@@ -177,9 +177,14 @@ onBeforeMount(() => {
                                 <i class="bi bi-person-fill card-icon"></i>
                             </div>
                             <h5 class="text-muted fw-normal mt-0">Persons</h5>
-                            <h3 class="mt-3 mb-3">{{ recognitions.length }}</h3>
+                            <h3 class="mt-3 mb-3" v-if="recognitions.length > 0">{{ recognitions.length }}</h3>
+                            <h3 class="mt-3 mb-3" v-else> - </h3>
                             <p class="mb-0 text-muted">
-                                <span class="text-success me-2"> {{ lastWeekRecons() }} </span>
+                                <span class="me-2" v-if="recognitions.length > 0"
+                                    :class="{ 'text-success': lastWeekRecons() != '0%', 'text-danger': lastWeekRecons() == '0%' }">
+                                    {{ lastWeekRecons() }}
+                                </span>
+                                <span class="text-success me-2" v-else> - % </span>
                                 <span class="text-nowrap">Added last week</span>
                             </p>
                         </div>
@@ -191,11 +196,14 @@ onBeforeMount(() => {
                             <div class="float-end">
                                 <i class="bi bi-browser-firefox card-icon"></i>
                             </div>
-                            <h5 class="text-muted fw-normal mt-0">Pets (Dogs & Cats)</h5>
+                            <h5 class="text-muted fw-normal mt-0">Pets</h5>
                             <h3 class="mt-3 mb-3" v-if="cameras.length > 0">{{ petIdentifications() }}</h3>
                             <h3 class="mt-3 mb-3" v-else> - </h3>
                             <p class="mb-0 text-muted" v-if="cameras.length > 0">
-                                <span class="text-success me-2"> {{ petIdentificationsPercentage() }} </span>
+                                <span class="me-2" 
+                                    :class="{ 'text-success': petIdentificationsPercentage() != '0%', 'text-danger': petIdentificationsPercentage() == '0%' }"> 
+                                    {{ petIdentificationsPercentage() }} 
+                                </span>
                                 <span class="text-nowrap">Active right now</span>
                             </p>
                             <p class="mb-0 text-muted" v-else>

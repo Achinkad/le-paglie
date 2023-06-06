@@ -13,7 +13,6 @@ export const useAlertStore = defineStore('alert', () => {
     async function loadAlerts() {
         await axiosApi.get('alerts').then(response => {
             alerts.value = response.data
-            console.log(response)
         }).catch(error => {
             notyf.error(error.response.data + " (" + error.response.status + ")")
         })

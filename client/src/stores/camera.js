@@ -10,6 +10,7 @@ export const useCameraStore = defineStore('camera', () => {
 
     const cameras = ref([]) // Cameras
     const photos = ref([]) // Photos
+    const pets = ref([]) // Pets
 
     async function loadCameras(body) {
         await axiosApi.get('cameras', { params: body }).then(response => {
@@ -23,7 +24,7 @@ export const useCameraStore = defineStore('camera', () => {
 
     async function registerCamera(data) {
         await axiosApi.post('cameras/create', data).then((response) => {
-            cameras.value.push(response.data.data)
+            cameras.value.push(response.data)
             notyf.success('The camera was registered with success.')
         }).catch((error) => {
             notyf.error(error.response.data + " (" + error.response.status + ")")
@@ -64,6 +65,25 @@ export const useCameraStore = defineStore('camera', () => {
         })
     }
 
+    async function loadPets(body) {
+        await axiosApi.get('pets', { params: body }).then(response => {
+            pets.value = response.data
+        }).catch(error => {
+            notyf.error(error.response.data + " (" + error.response.status + ")")
+        })
+    }
+
+    const getPets = (() => { return pets.value })
+
+    async function registerPet(data) {
+        await axiosApi.post('pets/create', data).then((response) => {
+            pets.value = response.data
+            notyf.success('The pet identification were alter with success.')
+        }).catch((error) => {
+            notyf.error(error.response.data + " (" + error.response.status + ")")
+        })
+    }
+
     return {
         loadCameras,
         getCameras,
@@ -71,6 +91,9 @@ export const useCameraStore = defineStore('camera', () => {
         registerPhotos,
         loadRecognitions,
         getRecognitions,
-        deleteRecognition
+        deleteRecognition,
+        loadPets,
+        getPets,
+        registerPet
     }
 })

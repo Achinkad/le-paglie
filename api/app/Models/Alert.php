@@ -14,8 +14,14 @@ class Alert extends Model
         'camera_id'
     ];
 
-    public function user() {
+    public function user() 
+    {
         return $this->belongsToMany(User::class, 'alert_user', 'alert_id', 'user_id')
             ->withPivot('alert_id', 'user_id');
+    }
+
+    public function camera()
+    {
+        return $this->belongsTo(Camera::class);
     }
 }

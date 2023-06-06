@@ -43,7 +43,24 @@ class CameraController extends Controller
         $camera->save();
         $currentUser = auth()->guard('api')->user();
         $currentUser->camera()->attach($camera->id);
-        return new CameraResource($camera);
+
+        $ip_address = $camera->ip_address;
+        $test_port = "2020";
+
+        $ch = curl_init($ip_address . ":" . $test_port);
+
+        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $data = curl_exec($ch);
+        $health = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+
+        $camera->disabled = $health > 0 ? false : true;
+
+        return $camera;
     }
 
     public function tooglePet(Request $request)

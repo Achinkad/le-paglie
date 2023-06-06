@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AlertController;
 use App\Http\Controllers\CameraController;
 use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\PetController;
 
 /* --- [API Routes] -> Users --- */
 Route::resource('users', UserController::class);
@@ -21,6 +22,10 @@ Route::patch('cameras/pet/{id}', [CameraController::class, 'tooglePet']);
 Route::get('photos', [PhotoController::class, 'getAllPhotos']);
 Route::post('photos/create', [PhotoController::class, 'registerPhoto']);
 Route::delete('photos/delete/{id}', [PhotoController::class, 'deletePhoto']);
+
+/* --- [API Routes] -> Pet Identification --- */
+Route::get('pets', [PetController::class, 'getPets']);
+Route::post('pets/create', [PetController::class, 'registerPet']);
 
 /* --- [API Routes] -> Alerts --- */
 Route::get('alerts', [AlertController::class, 'getAllAlerts']);

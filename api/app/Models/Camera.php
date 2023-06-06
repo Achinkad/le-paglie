@@ -13,7 +13,8 @@ class Camera extends Model
         'name',
         'ip_address',
         'location',
-        'authorization'
+        'authorization',
+        'pet_identification'
     ];
 
     public function user() 
@@ -25,5 +26,10 @@ class Camera extends Model
     public function recognition()
     {
         return $this->hasMany(Recognition::class, 'camera_id', 'id');
+    }
+
+    public function alert()
+    {
+        return $this->hasMany(Alert::class, 'camera_id', 'id');
     }
 }

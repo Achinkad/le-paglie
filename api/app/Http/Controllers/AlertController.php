@@ -17,8 +17,8 @@ class AlertController extends Controller
        
         $user = User::where('id', auth()->guard('api')->user()->id)->first();
 
-        $allAlerts = $user->alert;
-
+        $allAlerts = $user->alert()->with('camera')->get();
+        
         return $allAlerts;
     }
 
